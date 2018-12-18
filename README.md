@@ -20,7 +20,8 @@ apt-get install zfs-initramfs
 This erases the whole hard disk.  If you need the windows keys to run
 Windows in a virutalbox save them before you format the computer.
 
-This setup is very similar to the one Guy Robot talks about.
+This setup is very similar to the one Guy Robot talks about and the
+ZFS guide on funtoo also talks about.
 
 
 ```sh
@@ -30,7 +31,7 @@ parted -a optimal /dev/nvme0n1
 This is the partition that I hope to be making:
 
 | # | Usage | Size |
-|---
+|---|
 | 1 | Bios Partition | 3 MiB |
 | 2 | EFI Partition | 100 MiB |
 | 3 | Swap partition | 40,000 MiB |
@@ -43,7 +44,7 @@ unit mib
 mklabel gpt
 mkpart primary 1 3
 mkpart primary 3 103
-mkpart primary 103 603
+mkpart primary 103 40103
 mkpart primary 40103 -1
 name 1 grub
 name 2 esp
@@ -92,7 +93,9 @@ Create and enable the swap
 ```sh
 mkswap /dev/nvme0n1p3
 swapon /dev/nvme0n1p3
-``
+```
+
+
 # References
 
 - https://guyrobottv.wordpress.com/2017/04/18/installing-gentoo-linux-on-zfs-with-nvme-drive-part-1/
