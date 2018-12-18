@@ -99,7 +99,7 @@ Now add `boot/efi`
 
 ```sh
 cd /mnt/funtoo
-mkdir boot/efi
+mkdir -p boot/efi
 mount /dev/nvme0n1p2 boot/efi
 ```
 
@@ -125,10 +125,12 @@ mkdir -p /mnt/funtoo/etc/zfs
 cp /tmp/zpool.cache /mnt/funtoo/etc/zfs/zpool.cache
 # Make sure that the zpoolcache exists!
 
-# You will also want to copy over resolv.conf in order to have proper resolution of Internet hostnames from inside the chroot:
+# You will also want to copy over resolv.conf in order 
+# to have proper resolution of Internet hostnames from 
+# inside the chroot:
 
-# cp /etc/resolv.conf /mnt/funtoo/etc/
-We are now ready to chroot.
+cp /etc/resolv.conf /mnt/funtoo/etc/
+# We are now ready to chroot.
 
 chroot /mnt/funtoo /bin/bash
 export PS1="(chroot) $PS1"
