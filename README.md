@@ -31,7 +31,7 @@ parted -a optimal /dev/nvme0n1
 This is the partition that I hope to be making:
 
 | # | Usage | Size |
-|---|
+|---|-------|------|
 | 1 | Bios Partition | 3 MiB |
 | 2 | EFI Partition | 100 MiB |
 | 3 | Swap partition | 40,000 MiB |
@@ -169,10 +169,88 @@ rc-update add zfs-mount boot
 
 emerge --oneshot sys-kernel/genkernel
 genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
+
 ```
+
+Confirm the presence of the new initramfs:
+```sh
+ls /boot/*genkernel*
+```
+
+Grub expects the initramfs filename to be of the form:
+initramfs-${KNAME}-${ARCH}-${KV}. This guide assumes the usage of
+debian-sources. Tailor it to your specific kernel name, platform, and
+kernel version. Forgetting to rename initramfs-genkernel to
+initramfs-debian-sources will render the system unbootable.
+
+
+```
+cd /boot
+mv initramfs-genkernel-* initramfs-debian-souces-lts-x86_64-4.9.130-2
+ls /boot/*initramfs*
+```
+
+Now add grub with zfs support
+```
+##GRUB 2 must be built with support for ZFS Storage Pools on a 
+## single disk. This is achieved using the 'libzfs' USE flag.
+
+echo "sys-boot/grub libzfs" >> /etc/portage/package.use
+emerge grub
+touch /etc/mtab
+grub-probe / # Make sure this is zfs
+```
+
+## Add networking support
+
+```sh
+emerge linux-firmware networkmanager
+
+```
+
+## Making the terminal readable
+
+```sh
+emerge media-fonts/terminus-font
+```
+
+Then edit `/etc/conf.d/consolefont` to have:
+
+```
+consolefont="ter-132b"
+```
+
+After execute the command
+```sh
+# Enable legable fonts as soon as possible
+rc-update add consolefont sysinit
+```
+
+## Making grub readable
+
+Need to check where they are....
+
+```
+grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono48.pf2 \
+  --size=48 /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+```
+
+## Making colemak the default console keyboard
+edit `/usr/share/keymaps` to have the following line
+
+```
+keymap="en-latin9"
+```
+
+This way I can type without having to look at my keyboard.
+
+
 
 
 # References
 
-- https://guyrobottv.wordpress.com/2017/04/18/installing-gentoo-linux-on-zfs-with-nvme-drive-part-1/
-- https://www.funtoo.org/ZFS_Install_Guide
+- Gentoo nvme install guide https://guyrobottv.wordpress.com/2017/04/18/installing-gentoo-linux-on-zfs-with-nvme-drive-part-1/
+- ZFS install guide https://www.funtoo.org/ZFS_Install_Guide
+- Information on Console Fonts https://wiki.archlinux.org/index.php/HiDPI and https://www.funtoo.org/Fonts
+- Colemak Support https://blog.jolexa.net/post/gentoo-colemak-keymap-support/
+- Wifi networking https://www.funtoo.org/Install/Network
