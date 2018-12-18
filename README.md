@@ -105,6 +105,68 @@ mount /dev/nvme0n1p2 boot/efi
 
 Download stage3 tarball from https://www.funtoo.org/Intel64-skylake
 
+Then extract the tarball 
+
+```sh
+# Typically this is in the ~/Downloads if you download it from firefox, so
+cd /mnt/funtoo
+tar -xpvf ~/Downloads/stage3-latest.tar.xz
+```
+
+Next chroot into funtoo
+
+```sh
+cd /mnt/funtoo
+mount -t proc none proc
+mount --rbind /sys sys
+mount --rbind /dev dev
+
+mkdir -p /mnt/funtoo/etc/zfs
+cp /tmp/zpool.cache /mnt/funtoo/etc/zfs/zpool.cache
+# Make sure that the zpoolcache exists!
+
+# You will also want to copy over resolv.conf in order to have proper resolution of Internet hostnames from inside the chroot:
+
+# cp /etc/resolv.conf /mnt/funtoo/etc/
+We are now ready to chroot.
+
+chroot /mnt/funtoo /bin/bash
+export PS1="(chroot) $PS1"
+```
+
+## Setting up fstab
+
+This will setup the `boot/efi` and swap in the `/etc/fstab` file
+
+```sh
+echo /dev/nvme0n1p2    /boot/efi       vfat            defaults,noauto        1 2 >> /etc/fstab
+echo /dev/nvme0n1p3    none            swap            sw                     0 0 >> /etc/fstab
+ ```
+
+## Update portage
+
+```sh
+ego sync
+env-update
+source /etc/profile
+```
+
+## Add ZFS tools, bootloader and grub2
+
+```sh
+emerge --ask sys-fs/zfs
+# Once it has successfully merged, add the following services to the boot runlevel of OpenRC:
+rc-update add zfs-import boot
+rc-update add zfs-mount boot
+#Add another two services to the default runlevel:
+
+ rc-update add zfs-share default
+ rc-update add zfs-zed default
+#Create a ZFS-friendly initramfs
+
+emerge --oneshot sys-kernel/genkernel
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
+```
 
 
 # References
