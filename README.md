@@ -138,11 +138,12 @@ export PS1="(chroot) $PS1"
 
 ## Setting up fstab
 
-This will setup the `boot/efi` and swap in the `/etc/fstab` file
+This will setup the `boot/efi`, swap, and tmp directory in the `/etc/fstab` file
 
 ```sh
-echo /dev/nvme0n1p2    /boot/efi       vfat            defaults,noauto        1 2 >> /etc/fstab
+echo /dev/nvme0n1p2    /boot/efi       vfat            defaults,noauto        1 2 > /etc/fstab
 echo /dev/nvme0n1p3    none            swap            sw                     0 0 >> /etc/fstab
+echo tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0 >> etc/fstab
  ```
 
 ## Update portage
