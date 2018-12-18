@@ -194,6 +194,10 @@ grub-install /dev/nvme0n1
 ## Add networking support
 
 ```sh
+## The Desktop flavor is needed for networkmanager to work.
+epro flavor desktop
+emerge -auND @world ## Accept the configuration change
+emerge -auND @world ## install the packages
 emerge linux-firmware networkmanager
 
 ```
@@ -226,7 +230,7 @@ grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono48.pf2 \
 ```
 
 ## Making colemak the default console keyboard
-edit `/usr/share/keymaps` to have the following line
+edit `/etc/conf.d/keymaps` to have the following line
 
 ```
 keymap="en-latin9"
