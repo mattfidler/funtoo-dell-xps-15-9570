@@ -95,6 +95,17 @@ mkswap /dev/nvme0n1p3
 swapon /dev/nvme0n1p3
 ```
 
+Now add `boot/efi`
+
+```sh
+cd /mnt/funtoo
+mkdir boot/efi
+mount /dev/nvme0n1p2 boot/efi
+```
+
+Download stage3 tarball from https://www.funtoo.org/Intel64-skylake
+
+
 
 # References
 
