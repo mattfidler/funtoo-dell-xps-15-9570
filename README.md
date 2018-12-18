@@ -177,18 +177,7 @@ Confirm the presence of the new initramfs:
 ls /boot/*genkernel*
 ```
 
-Grub expects the initramfs filename to be of the form:
-initramfs-${KNAME}-${ARCH}-${KV}. This guide assumes the usage of
-debian-sources. Tailor it to your specific kernel name, platform, and
-kernel version. Forgetting to rename initramfs-genkernel to
-initramfs-debian-sources will render the system unbootable.
-
-
-```
-cd /boot
-mv initramfs-genkernel-* initramfs-debian-souces-lts-x86_64-4.9.130-2
-ls /boot/*initramfs*
-```
+This works with one kernel version.
 
 Now add grub with zfs support
 ```
@@ -199,6 +188,7 @@ echo "sys-boot/grub libzfs" >> /etc/portage/package.use
 emerge grub
 touch /etc/mtab
 grub-probe / # Make sure this is zfs
+grub-install /dev/nvme0n1
 ```
 
 ## Add networking support
