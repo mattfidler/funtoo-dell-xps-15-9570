@@ -168,6 +168,7 @@ rc-update add zfs-mount boot
 #Create a ZFS-friendly initramfs
 
 emerge --oneshot sys-kernel/genkernel
+rm -rf /boot/initramfs* # Remove Debian's default initramfs
 genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
 
 ```
@@ -222,11 +223,17 @@ rc-update add consolefont sysinit
 
 ## Making grub readable
 
-Need to check where they are....
-
 ```
+emerge media-fonts/dejavu # may need to re-emerege after X installs
+
 grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono48.pf2 \
-  --size=48 /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+  --size=48 /usr/share/fonts/dejavu/DejaVuSansMono.ttf
+```
+
+Then edit `etc/default/grub` and add the line:
+
+```sh
+GRUB_FONT=/boot/grub/fonts/DejaVuSansMono24.pf2
 ```
 
 ## Making colemak the default console keyboard
