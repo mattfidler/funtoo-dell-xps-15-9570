@@ -249,6 +249,8 @@ grub-install /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
+You need to make sure it picks up the generated `initramfs` otherwise the system will not boot.
+
 ## Making colemak the default console keyboard
 edit `/etc/conf.d/keymaps` to have the following line
 
@@ -269,8 +271,10 @@ Exit and reboot
 ```sh
 exit
 umount -lR {dev,proc,sys}
+umount boot/efi
+cd /
 zpool export rpool
-restart
+shutdown -r now
 ```
 
 
