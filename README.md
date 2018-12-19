@@ -232,8 +232,14 @@ grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono48.pf2 \
 
 Then edit `etc/default/grub` and add the line:
 
-```sh
+```
 GRUB_FONT=/boot/grub/fonts/DejaVuSansMono24.pf2
+```
+
+Make sure that the config file has:
+
+```
+GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
 ```
 
 After that update the grub configuration:
@@ -249,7 +255,6 @@ edit `/etc/conf.d/keymaps` to have the following line
 ```
 keymap="en-latin9"
 ```
-
 This way I can type without having to look at my keyboard.
 
 ## Final Configuration and reboot
