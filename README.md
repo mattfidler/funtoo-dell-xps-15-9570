@@ -246,6 +246,8 @@ grub-probe / # Make sure this is zfs
 ```
 emerge media-fonts/dejavu # may need to re-emerege after X installs
 
+mkdir -p /boot/fonts
+
 grub-mkfont --output=/boot/fonts/DejaVuSansMono48.pf2 \
   --size=48 /usr/share/fonts/dejavu/DejaVuSansMono.ttf
 ```
