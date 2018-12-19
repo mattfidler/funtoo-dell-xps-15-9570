@@ -239,6 +239,26 @@ keymap="en-latin9"
 This way I can type without having to look at my keyboard.
 
 
+## Recovery
+
+If for some reason you need to restart, here are the commands you will need to issue from the ubuntu terminal:
+
+```sh
+sudo bash
+apt-add-repository universe
+apt-get install zfs-initramfs
+zpool import rpool -R /mnt/funtoo
+cd /mnt/funtoo
+mount -t proc none proc
+mount --rbind /sys sys
+mount --rbind /dev dev
+mount /dev/nvme0n1p2 boot/efi
+cp /etc/resolv.conf /mnt/funtoo/etc/
+# We are now ready to chroot.
+
+chroot /mnt/funtoo /bin/bash
+export PS1="(chroot) $PS1"
+```
 
 
 # References
