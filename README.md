@@ -182,8 +182,12 @@ epro flavor desktop
 emerge -auND @world ## Accept the configuration change
 etc-update ## Use -3 to merge the updates
 emerge -auND @world ## install the packages
-emerge linux-firmware networkmanager
-
+emerge linux-firmware
+emerge -a networkmanager # May break gnome3 need to uninstall consolekit later...?
+etc-update # -3 to accept changes
+emerge networkmanager
+## See wiki.gnome.org/Projects/ConsoleKit
+rc-update add NetworkManager default
 ```
 
 ## Making the terminal readable
@@ -278,6 +282,18 @@ keymap="en-latin9"
 ```
 This way I can type without having to look at my keyboard.
 
+## Time zone configuration
+
+You should link to the local time-zone.  For me it is US Central Time with daylight savings:
+
+```sh
+ln -sf /usr/share/zoneinfo/CST6SDT /etc/localtime
+```
+
+## Locale setup
+
+For me, the US and UTF locales are appropriate so this does not need to change.
+
 ## Final Configuration and reboot
 
 ```sh
@@ -292,6 +308,7 @@ exit
 umount -lR {dev,proc,sys}
 umount boot/efi
 cd /
+zpool export boot
 zpool export rpool
 shutdown -r now
 ```
@@ -306,6 +323,7 @@ sudo bash
 apt-add-repository universe
 apt-get install zfs-initramfs
 zpool import rpool -R /mnt/funtoo
+zpool import boot -R /mnt/funtoo
 cd /mnt/funtoo
 mount -t proc none proc
 mount --rbind /sys sys
@@ -318,8 +336,11 @@ chroot /mnt/funtoo /bin/bash
 env-update
 source /etc/profile
 export PS1="(chroot) $PS1"
-mount /boot/efi
 ```
+
+# User configuration
+
+Need to add to `plugdev` for wifi access.  Also need `nm-appled` for gtk and `plasma-nm` for KDE
 
 
 # References
