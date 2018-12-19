@@ -245,6 +245,8 @@ GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
 After that update the grub configuration:
 
 ```sh
+emerge sys-apps/gptfdisk
+sgdisk -a1 -n2:48:2047 -t2:EF02 -c2:"BIOS boot partition" /dev/nvme0n1
 grub-install /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
