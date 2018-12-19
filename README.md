@@ -246,14 +246,14 @@ grub-probe / # Make sure this is zfs
 ```
 emerge media-fonts/dejavu # may need to re-emerege after X installs
 
-grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono48.pf2 \
+grub-mkfont --output=/boot/fonts/DejaVuSansMono48.pf2 \
   --size=48 /usr/share/fonts/dejavu/DejaVuSansMono.ttf
 ```
 
 Then edit `etc/default/grub` and add the line:
 
 ```
-GRUB_FONT=/boot/grub/fonts/DejaVuSansMono48.pf2
+GRUB_FONT=/boot/fonts/DejaVuSansMono48.pf2
 ```
 
 Make sure that the config file has:
@@ -343,23 +343,49 @@ mount /boot/efi
 Then you can modify the kernel options by:
 
 ```sh
+# I do this from the ubuntu environment
+sudo bash
+apt-add-repository universe
+apt-get install zfs-initramfs
+zpool import rpool -R /mnt/funtoo
+zpool import boot -R /mnt/funtoo
+cd /mnt/funtoo
+mount -t proc none proc
+mount --rbind /sys sys
+mount --rbind /dev dev
+mount /dev/nvme0n1p2 boot/efi
+cp /etc/resolv.conf /mnt/funtoo/etc/
+# We are now ready to chroot.
+
+chroot /mnt/funtoo /bin/bash
+env-update
+source /etc/profile
+export PS1="(chroot) $PS1"
+
 ## This is unsafe, but since you have zfs you can restore if you 
 ## need to from the Ubuntu rescue cd as long as you saved the snapshot.
 rm /boot/System.map*
 rm /boot/initramfs*
 rm /boot/kernel*
+rm -rf /boot/grub # Grub has a zfs module that has to be updated
 cd /usr/src/linux
 wget ## My kernel configuration here; Note that many things can be disabled in this configuration
 make menuconfig ## Change any options you wish here.
 make -j12
 make modules_install && make install
 ## Now install zfs again
-emerge -1 spl
-emerge -1 zfs-kmod
-genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
-grub-install --efi-directory=/boot/efi /dev/nvme0n1 # compailns about read-only file system.
+emerge zfs-kmod zfs
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs --firmware
+grub-install --efi-directory=/boot/efi /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 ## Reboot and cross your fingers... :)
+exit
+umount -lR {dev,proc,sys}
+umount boot/efi
+cd /
+zpool export boot
+zpool export rpool
+shutdown -r now
 
 ```
 
@@ -389,9 +415,9 @@ export PS1="(chroot) $PS1"
 
 ## If you need to restore either the root or boot partition you can by
 
-zpool rollback boot@install
+zfs rollback boot@install
 
-zpool rollback rpool/ROOT/funtoo@install
+zfs rollback rpool/ROOT/funtoo@install
 
 ```
 
