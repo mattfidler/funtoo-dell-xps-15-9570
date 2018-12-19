@@ -180,6 +180,7 @@ rc-update add zfs-mount boot
 ## The Desktop flavor is needed for networkmanager to work.
 epro flavor desktop
 emerge -auND @world ## Accept the configuration change
+etc-update ## Use -3 to merge the updates
 emerge -auND @world ## install the packages
 emerge linux-firmware networkmanager
 
