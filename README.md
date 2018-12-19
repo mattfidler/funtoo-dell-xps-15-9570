@@ -236,6 +236,13 @@ Then edit `etc/default/grub` and add the line:
 GRUB_FONT=/boot/grub/fonts/DejaVuSansMono24.pf2
 ```
 
+After that update the grub configuration:
+
+```sh
+grub-install /dev/nvme0n1
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
 ## Making colemak the default console keyboard
 edit `/etc/conf.d/keymaps` to have the following line
 
@@ -244,6 +251,22 @@ keymap="en-latin9"
 ```
 
 This way I can type without having to look at my keyboard.
+
+## Final Configuration and reboot
+
+```sh
+## make sure root has a password
+passwd
+```
+
+Exit and reboot
+
+```sh
+exit
+umount -lR {dev,proc,sys}
+zpool export rpool
+restart
+```
 
 
 ## Recovery
