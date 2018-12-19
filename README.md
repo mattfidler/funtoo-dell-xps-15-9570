@@ -87,12 +87,10 @@ zfs create -o mountpoint=/home rpool/HOME
  
  zpool set bootfs=rpool/ROOT/funtoo rpool
 
+zpool create -f -d -o ashift=12 -o cachefile=none -m /boot -R /mnt/funtoo boot /dev/nvme0n1p3
 
 # Confirm the list
 zfs list -t all
-
-zpool create -f -d -o ashift=12 -o cachefile=none -m /boot -R /mnt/funtoo boot /dev/nvme0n1p3
-
 
 ```
 
@@ -118,7 +116,7 @@ Then extract the tarball
 ```sh
 # Typically this is in the ~/Downloads if you download it from firefox, so
 cd /mnt/funtoo
-tar -xpvf ~/Downloads/stage3-latest.tar.xz
+tar -xpvf ~/Downloads/stage3-*.tar.xz
 ```
 
 Next chroot into funtoo
