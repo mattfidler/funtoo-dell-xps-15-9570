@@ -34,8 +34,9 @@ This is the partition that I hope to be making:
 |---|-------|------|
 | 1 | Bios Partition | 3 MiB |
 | 2 | EFI Partition | 100 MiB |
-| 3 | Swap partition | 40,000 MiB |
-| 4 | Root Partition | All Remaining |
+| 3 | Boot Partition | 500 MiB |
+| 4 | Swap partition | 40,000 MiB |
+| 5 | Root Partition | All Remaining |
 
 Once parted starts these are the commands that you can type
 
@@ -44,12 +45,14 @@ unit mib
 mklabel gpt
 mkpart primary 1 3
 mkpart primary 3 103
-mkpart primary 103 40103
-mkpart primary 40103 -1
+mkpart primary 103 603
+mkpart primary 603 40603
+mkpart primary 40603 -1
 name 1 grub
 name 2 esp
-name 3 swap
-name 4 rpool
+name 3 boot
+name 4 swap
+name 5 rpool
 set 1 bios_grub on
 set 2 boot on
 print
@@ -65,7 +68,7 @@ mkfs.fat -F32 /dev/nvme0n1p2
 Then create the ZFS pools
 
 ```
-zpool create -f -o ashift=12 -o cachefile=/tmp/zpool.cache -O normalization=formD -O atime=off -m none -R /mnt/funtoo rpool /dev/nvme0n1p3
+zpool create -f -d -o feature@async_destroy=enabled -o feature@empty_bpobj=enabled -o feature@lz4_compress=enabled -o feature@multi_vdev_crash_dump=enabled -o feature@spacemap_histogram=enabled -o feature@enabled_txg=enabled -o feature@hole_birth=enabled -o feature@extensible_dataset=enabled -o feature@embedded_data=enabled -o feature@bookmarks=enabled -o feature@filesystem_limits=enabled -o feature@large_blocks=enabled -o feature@sha512=enabled -o feature@skein=enabled -o feature@edonr=enabled -o feature@userobj_accounting=enabled -o ashift=12 -o cachefile=/tmp/zpool.cache -O compression=lz4 -O normalization=formD  -O atime=off -m none -R /mnt/funtoo rpool /dev/nvme0n1p5
 
 # Root pool
 zfs create -o mountpoint=none -o canmount=off rpool/ROOT
@@ -79,20 +82,25 @@ zfs create -o mountpoint=/var/tmp/portage -o compression=lz4 -o sync=disabled rp
 
 zfs create -o mountpoint=/home rpool/HOME
 
-# Make the root system bootable
 
-zpool set bootfs=rpool/ROOT/funtoo rpool
+ # Make the root system bootable
+ 
+ zpool set bootfs=rpool/ROOT/funtoo rpool
+
 
 # Confirm the list
 zfs list -t all
+
+zpool create -f -d -o ashift=12 -o cachefile=none -m /boot -R /mnt/funtoo boot /dev/nvme0n1p3
+
 
 ```
 
 Create and enable the swap
 
 ```sh
-mkswap /dev/nvme0n1p3
-swapon /dev/nvme0n1p3
+mkswap /dev/nvme0n1p4
+swapon /dev/nvme0n1p4
 ```
 
 Now add `boot/efi`
@@ -245,16 +253,16 @@ GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
 Add `GRUB_PLATFORMS` to the `make.conf` if not present
 
 ```sh
-echo GRUB_PLATFORMS="efi-64 pc" >> /etc/portage/make.conf
+echo 'GRUB_PLATFORMS="efi-64 pc"' >> /etc/portage/make.conf
 ```
 
 After that update the grub configuration:
 
 ```sh
 emerge sys-apps/gptfdisk
-sgdisk -a1 -n2:48:2047 -t2:EF02 -c2:"BIOS boot partition" /dev/nvme0n1p1
-partx -u /dev/nvme0n1p1 ## Refresh the partitions
-grub-install /dev/nvme0n1
+sgdisk -g -a1 -n2:48:2047 -t2:EF02 -c2:"BIOS boot partition" /dev/nvme0n1p1
+partx -u /dev/nvme0n1 ## Refresh the partitions
+grub-install --efi-directory=/boot/efi /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
