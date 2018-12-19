@@ -233,7 +233,7 @@ grub-mkfont --output=/boot/grub/fonts/DejaVuSansMono48.pf2 \
 Then edit `etc/default/grub` and add the line:
 
 ```
-GRUB_FONT=/boot/grub/fonts/DejaVuSansMono24.pf2
+GRUB_FONT=/boot/grub/fonts/DejaVuSansMono48.pf2
 ```
 
 Make sure that the config file has:
