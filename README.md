@@ -242,11 +242,18 @@ Make sure that the config file has:
 GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
 ```
 
+Add `GRUB_PLATFORMS` to the `make.conf` if not present
+
+```sh
+echo GRUB_PLATFORMS="efi-64 pc" >> /etc/portage/make.conf
+```
+
 After that update the grub configuration:
 
 ```sh
 emerge sys-apps/gptfdisk
-sgdisk -a1 -n2:48:2047 -t2:EF02 -c2:"BIOS boot partition" /dev/nvme0n1
+sgdisk -a1 -n2:48:2047 -t2:EF02 -c2:"BIOS boot partition" /dev/nvme0n1p1
+partx -u /dev/nvme0n1p1 ## Refresh the partitions
 grub-install /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
@@ -301,6 +308,7 @@ chroot /mnt/funtoo /bin/bash
 env-update
 source /etc/profile
 export PS1="(chroot) $PS1"
+mount /boot/efi
 ```
 
 
