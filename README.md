@@ -221,15 +221,18 @@ ls /boot/*genkernel*
 This works with one kernel version.
 
 Now add grub with zfs support
-```
+
+```sh
 ##GRUB 2 must be built with support for ZFS Storage Pools on a 
 ## single disk. This is achieved using the 'libzfs' USE flag.
 
 echo "sys-boot/grub libzfs" >> /etc/portage/package.use
+## Add `GRUB_PLATFORMS` to the `make.conf` if not present
+echo 'GRUB_PLATFORMS="efi-64 pc"' >> /etc/portage/make.conf
+
 emerge grub
 touch /etc/mtab
 grub-probe / # Make sure this is zfs
-grub-install /dev/nvme0n1
 ```
 
 
@@ -254,10 +257,6 @@ Make sure that the config file has:
 GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
 ```
 
-Add `GRUB_PLATFORMS` to the `make.conf` if not present
-
-```sh
-echo 'GRUB_PLATFORMS="efi-64 pc"' >> /etc/portage/make.conf
 ```
 
 After that update the grub configuration:
