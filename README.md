@@ -257,6 +257,8 @@ cp /etc/resolv.conf /mnt/funtoo/etc/
 # We are now ready to chroot.
 
 chroot /mnt/funtoo /bin/bash
+env-update
+source /etc/profile
 export PS1="(chroot) $PS1"
 ```
 
