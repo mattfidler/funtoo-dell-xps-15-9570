@@ -171,31 +171,7 @@ rc-update add zfs-mount boot
 
  rc-update add zfs-share default
  rc-update add zfs-zed default
-#Create a ZFS-friendly initramfs
 
-emerge --oneshot sys-kernel/genkernel
-rm -rf /boot/initramfs* # Remove Debian's default initramfs
-genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
-
-```
-
-Confirm the presence of the new initramfs:
-```sh
-ls /boot/*genkernel*
-```
-
-This works with one kernel version.
-
-Now add grub with zfs support
-```
-##GRUB 2 must be built with support for ZFS Storage Pools on a 
-## single disk. This is achieved using the 'libzfs' USE flag.
-
-echo "sys-boot/grub libzfs" >> /etc/portage/package.use
-emerge grub
-touch /etc/mtab
-grub-probe / # Make sure this is zfs
-grub-install /dev/nvme0n1
 ```
 
 ## Add networking support
@@ -226,6 +202,36 @@ After execute the command
 # Enable legable fonts as soon as possible
 rc-update add consolefont sysinit
 ```
+
+## Grub and bootloader
+
+
+```
+#Create a ZFS-friendly initramfs
+
+emerge --oneshot sys-kernel/genkernel
+rm -rf /boot/initramfs* # Remove Debian's default initramfs
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
+
+Confirm the presence of the new initramfs:
+```sh
+ls /boot/*genkernel*
+```
+
+This works with one kernel version.
+
+Now add grub with zfs support
+```
+##GRUB 2 must be built with support for ZFS Storage Pools on a 
+## single disk. This is achieved using the 'libzfs' USE flag.
+
+echo "sys-boot/grub libzfs" >> /etc/portage/package.use
+emerge grub
+touch /etc/mtab
+grub-probe / # Make sure this is zfs
+grub-install /dev/nvme0n1
+```
+
 
 ## Making grub readable
 
