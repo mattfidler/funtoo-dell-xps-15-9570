@@ -85,7 +85,7 @@ zfs create -o mountpoint=/home rpool/HOME
 
  # Make the root system bootable
  
- zpool set bootfs=rpool/ROOT/funtoo rpool
+zpool set bootfs=rpool/ROOT/funtoo rpool
 
 zpool create -f -d -o ashift=12 -o cachefile=none -m /boot -R /mnt/funtoo boot /dev/nvme0n1p3
 
@@ -144,12 +144,13 @@ export PS1="(chroot) $PS1"
 
 ## Setting up fstab
 
-This will setup the `boot/efi`, swap, and tmp directory in the `/etc/fstab` file
+This will setup the `/boot`, `/boot/efi`, swap, and `/tmp` directory in the `/etc/fstab` file
 
 ```sh
 echo /dev/nvme0n1p2    /boot/efi       vfat            defaults,noauto        1 2 > /etc/fstab
-echo /dev/nvme0n1p3    none            swap            sw                     0 0 >> /etc/fstab
+echo /dev/nvme0n1p4    none            swap            sw                     0 0 >> /etc/fstab
 echo tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0 >> etc/fstab
+echo /dev/nvme0n1p3		/ zfs	bind,defaults,nofail,x-systemd.requires=zfs-mount.service	0 0
  ```
 
 ## Update portage
@@ -313,10 +314,59 @@ zpool export rpool
 shutdown -r now
 ```
 
+## Setting up networking and setup reset state.
+
+After rebooting setup your WiFi internt using `nmtui`.  Once you have
+set this up, and check it is working using `ping www.google.com`, save
+your zfs state in case you need to reset to this point.
+
+```sh
+# First import the boot pool
+zpool import boot
+zpool snapshot boot@install
+zpool snapshot rpool/ROOT/funtoo@install
+```
+
+## Changing the kernel options so that Xorg will work
+Without dropping some of the frame-buffer support Xorg doesn't really
+work. Because of this, you will need to compile your own kernel
+removing all the framebuffer options except simple frame-buffer.  You
+can also build-in the nvme options and change the processor type to an
+intel xenon (for possible gains in performance)
+
+To do this, after a boot
+```sh
+zpool import boot # import the boot pool
+mount /boot/efi
+```
+
+Then you can modify the kernel options by:
+
+```sh
+## This is unsafe, but since you have zfs you can restore if you 
+## need to from the Ubuntu rescue cd as long as you saved the snapshot.
+rm /boot/System.map*
+rm /boot/initramfs*
+rm /boot/kernel*
+cd /usr/src/linux
+wget ## My kernel configuration here; Note that many things can be disabled in this configuration
+make menuconfig ## Change any options you wish here.
+make -j12
+make modules_install && make install
+## Now install zfs again
+emerge -1 spl
+emerge -1 zfs-kmod
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
+grub-install --efi-directory=/boot/efi /dev/nvme0n1 # compailns about read-only file system.
+grub-mkconfig -o /boot/grub/grub.cfg
+## Reboot and cross your fingers... :)
+
+```
 
 ## Recovery
 
-If for some reason you need to restart, here are the commands you will need to issue from the ubuntu terminal:
+If for some reason you need to restart using the Ubuntu installer USB,
+here are the commands you will need to issue from the ubuntu terminal:
 
 ```sh
 sudo bash
@@ -336,6 +386,13 @@ chroot /mnt/funtoo /bin/bash
 env-update
 source /etc/profile
 export PS1="(chroot) $PS1"
+
+## If you need to restore either the root or boot partition you can by
+
+zpool rollback boot@install
+
+zpool rollback rpool/ROOT/funtoo@install
+
 ```
 
 # User configuration
