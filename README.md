@@ -277,3 +277,4 @@ export PS1="(chroot) $PS1"
 - Information on Console Fonts https://wiki.archlinux.org/index.php/HiDPI and https://www.funtoo.org/Fonts
 - Colemak Support https://blog.jolexa.net/post/gentoo-colemak-keymap-support/
 - Wifi networking https://www.funtoo.org/Install/Network
+- Grub Fotns http://blog.wxm.be/2014/08/29/increase-font-in-grub-for-high-dpi.html
