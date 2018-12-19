@@ -207,7 +207,7 @@ rc-update add consolefont sysinit
 ## Grub and bootloader
 
 
-```
+```sh
 #Create a ZFS-friendly initramfs
 
 emerge --oneshot sys-kernel/genkernel
@@ -215,7 +215,6 @@ rm -rf /boot/initramfs* # Remove Debian's default initramfs
 genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
 
 Confirm the presence of the new initramfs:
-```sh
 ls /boot/*genkernel*
 ```
 
@@ -258,7 +257,6 @@ Make sure that the config file has:
 GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
 ```
 
-```
 
 After that update the grub configuration:
 
