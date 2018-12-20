@@ -381,6 +381,7 @@ sudo bash
 apt-add-repository universe
 apt-get install zfs-initramfs
 zpool import rpool -R /mnt/funtoo -o cachefile=/tmp/zpool.cache # needed to rebuild kernel
+zpool set bootfs=rpool/ROOT/funtoo rpool
 zpool import boot -R /mnt/funtoo
 cd /mnt/funtoo
 mount -t proc none proc
