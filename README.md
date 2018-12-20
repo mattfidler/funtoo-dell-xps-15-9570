@@ -352,7 +352,7 @@ zcat /proc/config.gz > .config
 genkernel kernel --no-mrproper --no-clean --menuconfig --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=rpool/ROOT/funtoo
 ego sync
 emerge zfs-kmod zfs linux-firmware sys-firmware/intel-microcode # Update zfs modules
-genkernel initramfs --no-mrproper --no-clean --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=root/ROOT/funtoo --firmware
+genkernel initramfs --no-mrproper --no-clean --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=root/ROOT/funtoo --firmware --microcode
 ## grub-install --efi-directory=/boot/efi /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 
