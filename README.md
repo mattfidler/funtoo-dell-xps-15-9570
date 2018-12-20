@@ -351,7 +351,7 @@ zcat /proc/config.gz > .config
 genkernel kernel --no-mrproper --no-clean --menuconfig --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=rpool/ROOT/funtoo
 ego sync
 emerge zfs-kmod zfs linux-firmware sys-firmware/intel-microcode # Update zfs modules
-genkernel initramfs --no-mrproper --no-clean --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=root/ROOT/funtoo --firmware
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j4 --kernel-config=/usr/src/linux/.config --zfs --firmware
 ## grub-install --efi-directory=/boot/efi /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -389,7 +389,7 @@ mount --rbind /sys sys
 mount --rbind /dev dev
 mount /dev/nvme0n1p2 boot/efi
 cp /etc/resolv.conf /mnt/funtoo/etc/
-cp /tmp/zpool.cache /mnt/etc/zfs/ # needed to rebuild kernel
+cp /tmp/zpool.cache /mnt/funtoo/etc/zfs/ # needed to rebuild kernel
 # We are now ready to chroot.
 
 chroot /mnt/funtoo /bin/bash
