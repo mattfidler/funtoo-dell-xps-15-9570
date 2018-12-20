@@ -150,7 +150,6 @@ This will setup the `/boot`, `/boot/efi`, swap, and `/tmp` directory in the `/et
 echo /dev/nvme0n1p2    /boot/efi       vfat            defaults,noauto        1 2 > /etc/fstab
 echo /dev/nvme0n1p4    none            swap            sw                     0 0 >> /etc/fstab
 echo tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0 >> etc/fstab
-echo /dev/nvme0n1p3		/ zfs	bind,defaults,nofail,x-systemd.requires=zfs-mount.service	0 0
  ```
 
 ## Update portage
@@ -234,6 +233,8 @@ Now add grub with zfs support
 echo "sys-boot/grub libzfs" >> /etc/portage/package.use
 ## Add `GRUB_PLATFORMS` to the `make.conf` if not present
 echo 'GRUB_PLATFORMS="efi-64 pc"' >> /etc/portage/make.conf
+
+echo "sys-firmware/intel-microcode initramfs" >> /etc/portage/package.use
 
 emerge grub
 touch /etc/mtab
