@@ -335,41 +335,51 @@ removing all the framebuffer options except simple frame-buffer.  You
 can also build-in the nvme options and change the processor type to an
 intel xenon (for possible gains in performance)
 
-To do this, after a boot
-```sh
-zpool import boot # import the boot pool
-mount /boot/efi
+You may have to do this multiple times so I created a script
+`/root/kbuild.sh` that does the following:
+
+- Gets the running Kenrel's configuration
+- Uses genkernel to generate the new kernel including a call to
+  `menuconfig` to modify any options
+- Builds the kernel and the initramfs
+- Installs the kernel
+
+For the bumblebee support you will need to disable the noveau  drivers and all the framebuffer drivers except the simple frame-buffer.
+
+First, I'm upgrading to the gentoo kernel so:
+
 ```
-
-Then you can modify the kernel options by:
-
-```sh
 zpool import boot
-emerge genkernel intel-microcode
+emerge gentoo-sources
+cd /usr/src
+rm linux
+ln -sf linux-4.19.1-gentoo linux
 cd /usr/src/linux
-zcat /proc/config.gz > .config
-genkernel kernel --no-mrproper --no-clean --menuconfig --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=rpool/ROOT/funtoo --kernel-config=.config
-#ego sync
-#emerge zfs-kmod zfs linux-firmware sys-firmware/intel-microcode # Update zfs modules
-genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs --firmware
-## grub-install --efi-directory=/boot/efi /dev/nvme0n1
+zcat /proc/config.gz > /root/config 
+genkernel kernel --no-clean --no-mountboot --menuconfig --makeopts=-j12 --kernel-config=/root/config --install --zfs
+emerge zfs-kmod zfs
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/root/config --install --zfs --ramdisk-modules
 grub-mkconfig -o /boot/grub/grub.cfg
-
-
-## In the future....
-# echo "sys-kernel/debian-sources binary" >> /etc/portage/package.use
-# emerge debian-sources
-
-## Reboot and cross your fingers... :)
-exit
-umount -lR {dev,proc,sys}
-umount boot/efi
-cd /
-zpool export boot
-zpool export rpool
-reboot
-
 ```
+
+After rebooting, you may want to update the snapshots, and then start
+the Xorg setup process.
+
+## Add the correct mix-ins
+
+```sh
+echo 'VIDEO_CARDS="intel i965 nvidia"' >> /etc/portage/make.conf
+echo 'INPUT_DEVICES="evdev wacom keyboard mouse libinput synaptics"' >> /etc/portage/make.conf
+echo 'x11-drivers/nvidia-drivers X acpi compat driver gtk3 tools -kms -pax_kernel -static-libs -uvm -wayland' >> /etc/portage/package.use
+echo 'x11-drivers/xf86-video-intel dri dri3 sna udev xvmc -debug -tools -uxa' >> /etc/portage/package.use
+echo 'x11-drivers/xf86-video-intel bbswitch video_cards_nvidia -video_cards_nouveau' >> /etc/portage/package.use
+
+
+I will be using +kde and +gnome flavors for
+the desktop.
+
+
+
 
 ## Recovery
 
@@ -407,7 +417,7 @@ zfs rollback rpool/ROOT/funtoo@install
 
 # User configuration
 
-Need to add to `plugdev` for wifi access.  Also need `nm-appled` for gtk and `plasma-nm` for KDE
+Need to add to `plugdev` for wifi access, `video` for nvidia access.  Also need `nm-appled` for gtk and `plasma-nm` for KDE
 
 
 # References
