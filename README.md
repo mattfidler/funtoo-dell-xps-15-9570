@@ -234,8 +234,6 @@ echo "sys-boot/grub libzfs" >> /etc/portage/package.use
 ## Add `GRUB_PLATFORMS` to the `make.conf` if not present
 echo 'GRUB_PLATFORMS="efi-64 pc"' >> /etc/portage/make.conf
 
-echo "sys-firmware/intel-microcode initramfs" >> /etc/portage/package.use
-
 emerge grub
 touch /etc/mtab
 grub-probe / # Make sure this is zfs
@@ -353,7 +351,7 @@ zcat /proc/config.gz > .config
 genkernel kernel --no-mrproper --no-clean --menuconfig --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=rpool/ROOT/funtoo
 ego sync
 emerge zfs-kmod zfs linux-firmware sys-firmware/intel-microcode # Update zfs modules
-genkernel initramfs --no-mrproper --no-clean --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=root/ROOT/funtoo --firmware --microcode
+genkernel initramfs --no-mrproper --no-clean --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=root/ROOT/funtoo --firmware
 ## grub-install --efi-directory=/boot/efi /dev/nvme0n1
 grub-mkconfig -o /boot/grub/grub.cfg
 
