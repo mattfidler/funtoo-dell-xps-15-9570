@@ -12,7 +12,7 @@ Setup zfs tools in ubuntu
 ```sh
 sudo bash
 apt-add-repository universe
-apt-get install zfs-initramfs
+apt-get install --yes zfs-initramfs
 ```
 
 ## Setup Hard Disk
@@ -379,7 +379,7 @@ here are the commands you will need to issue from the ubuntu terminal:
 ```sh
 sudo bash
 apt-add-repository universe
-apt-get install zfs-initramfs
+apt-get install --yes zfs-initramfs
 zpool import rpool -R /mnt/funtoo -o cachefile=/tmp/zpool.cache # needed to rebuild kernel
 zpool set bootfs=rpool/ROOT/funtoo rpool
 zpool import boot -R /mnt/funtoo
