@@ -414,3 +414,4 @@ Need to add to `plugdev` for wifi access.  Also need `nm-appled` for gtk and `pl
 - Colemak Support https://blog.jolexa.net/post/gentoo-colemak-keymap-support/
 - Wifi networking https://www.funtoo.org/Install/Network
 - Grub Fotns http://blog.wxm.be/2014/08/29/increase-font-in-grub-for-high-dpi.html
+- Dell XPS 15 9560 Gentoo wiki https://wiki.gentoo.org/wiki/Dell_XPS_15_9560
