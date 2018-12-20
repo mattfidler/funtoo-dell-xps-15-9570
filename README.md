@@ -349,9 +349,12 @@ zpool import boot
 emerge genkernel intel-microcode
 cd /usr/src/linux
 zcat /proc/config.gz > .config
-genkernel all --no-mrproper --no-clean --menuconfig --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=rpool/ROOT/funtoo 
+genkernel kernel --no-mrproper --no-clean --menuconfig --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=rpool/ROOT/funtoo --firmware
+ego sync
+emerge zfs-kmod zfs # Update zfs modules
+genkernel initramfs --no-mrproper --no-clean --no-mountboot --makeopts=-j12 --zfs --real-root=ZFS=root/ROOT/funtoo --firmware
 ## grub-install --efi-directory=/boot/efi /dev/nvme0n1
-## grub-mkconfig -o /boot/grub/grub.cfg
+grub-mkconfig -o /boot/grub/grub.cfg
 
 
 ## In the future....
