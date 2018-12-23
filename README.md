@@ -378,6 +378,14 @@ echo 'x11-drivers/xf86-video-intel bbswitch video_cards_nvidia -video_cards_nouv
 I will be using +kde and +gnome flavors for
 the desktop.
 
+## Emacs
+```sh
+echo "app-editors/emacs xft" >> /etc/portage/package.use
+emerge -a emacs
+emacs --font 'DejaVu Sans Mono-18'
+echo "Emacs.font: DejaVu Sans Mono-18" >> ~/.Xresources
+xrdb -merge ~/.Xresources
+```
 
 
 
