@@ -163,6 +163,8 @@ source /etc/profile
 ## Add ZFS tools, bootloader and grub2
 
 ```sh
+echo "=sys-fs/zfs-kmod-9999 **" >>/etc/portage/package.accept_keywords
+echo "=sys-fs/zfs-9999 **" >>/etc/portage/package.accept_keywords
 emerge --ask sys-fs/zfs
 # Once it has successfully merged, add the following services to the boot runlevel of OpenRC:
 rc-update add zfs-import boot
