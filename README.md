@@ -186,10 +186,10 @@ emerge linux-firmware
 ## Add the following to /etc/portage/make.conf
 ## USE="elogind -consolekit -systemd"
 ## This allows KDE/Gnome support as well as the networkmanager
-emerge -a networkmanager # May break gnome3 need to uninstall consolekit later...?
-etc-update # -3 to accept changes
+emerge networkmanager # May break gnome3 need to uninstall consolekit later...?
 emerge networkmanager
 ## See wiki.gnome.org/Projects/ConsoleKit
+rc-update add elogind boot
 rc-update add NetworkManager default
 ```
 
