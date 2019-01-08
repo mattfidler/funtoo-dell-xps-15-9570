@@ -327,8 +327,8 @@ your zfs state in case you need to reset to this point.
 ```sh
 # First import the boot pool
 zpool import boot
-zpool snapshot boot@install
-zpool snapshot rpool/ROOT/funtoo@install
+zfs snapshot boot@install
+zfs snapshot rpool/ROOT/funtoo@install
 ```
 
 ## Changing the kernel options so that Xorg will work
@@ -360,7 +360,7 @@ ln -sf linux-4.19.1-gentoo linux
 cd /usr/src/linux
 zcat /proc/config.gz > /root/config 
 genkernel kernel --no-clean --no-mountboot --menuconfig --makeopts=-j12 --kernel-config=/root/config --install --zfs
-emerge zfs-kmod zfs
+emerge --ask @module-rebuild
 genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/root/config --install --zfs --ramdisk-modules
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
