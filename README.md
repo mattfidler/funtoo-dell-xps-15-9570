@@ -403,13 +403,17 @@ here are the commands you will need to issue from the ubuntu terminal:
 sudo bash
 apt-add-repository universe
 apt-get install --yes zfs-initramfs
-zpool import rpool -R /mnt/funtoo -o cachefile=/tmp/zpool.cache # needed to rebuild kernel
+
+
+zpool import -f rpool -R /mnt/funtoo -o cachefile=/tmp/zpool.cache # needed to rebuild kernel
 zpool set bootfs=rpool/ROOT/funtoo rpool
-zpool import boot -R /mnt/funtoo
+zpool import -f boot -R /mnt/funtoo
+
 cd /mnt/funtoo
 mount -t proc none proc
 mount --rbind /sys sys
 mount --rbind /dev dev
+
 mount /dev/nvme0n1p2 boot/efi
 cp /etc/resolv.conf /mnt/funtoo/etc/
 cp /tmp/zpool.cache /mnt/funtoo/etc/zfs/ # needed to rebuild kernel
