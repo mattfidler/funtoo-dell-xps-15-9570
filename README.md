@@ -391,7 +391,15 @@ emacs --font 'DejaVu Sans Mono-18'
 echo "Emacs.font: DejaVu Sans Mono-18" >> ~/.Xresources
 xrdb -merge ~/.Xresources
 ```
+## Adding the video
 
+Follow the directions for enabling bumblebee or nvidia.  I have had the most luck with nvidia.  Once you installed nvidia, you will need to add `nvidia` to the boot parameters.  If you don't, you will not be able to see the boot process until nvidia is loaded.
+
+I also install plymouth.  My final grub configuration  at `/etc/default/grub` line `GRUB_CMDLINE_LINUX` shows the early loading of `GRUB_CMDLINE_LINUX`:
+
+```
+GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo nvidia quiet splash acpi_rev_override=1 acpi_osi=Linux pcie_aspm=force drm.vblankoffdelay=1 sci_mod.use_blk_mq=1 mem_sleep_default=deep"
+```
 
 
 ## Recovery
