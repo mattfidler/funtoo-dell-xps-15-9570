@@ -391,7 +391,7 @@ emacs --font 'DejaVu Sans Mono-18'
 echo "Emacs.font: DejaVu Sans Mono-18" >> ~/.Xresources
 xrdb -merge ~/.Xresources
 ```
-## Adding the video
+## Adding the video to the bootup.
 
 Follow the directions for enabling bumblebee or nvidia.  I have had the most luck with nvidia.  Once you installed nvidia, you will need to add `nvidia` to the boot parameters.  If you don't, you will not be able to see the boot process until nvidia is loaded.
 
@@ -400,6 +400,15 @@ I also install plymouth.  My final grub configuration  at `/etc/default/grub` li
 ```
 GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo nvidia quiet splash acpi_rev_override=1 acpi_osi=Linux pcie_aspm=force drm.vblankoffdelay=1 sci_mod.use_blk_mq=1 mem_sleep_default=deep"
 ```
+
+## Adding gestures.
+
+You may emerge `libinput-gestures` to allow configuration of tablet-like gestures for the touch screen under linux.  After follow the guide here:
+
+https://github.com/bulletmark/libinput-gestures
+
+## Using gnome gdm and changing the keyboard layout.
+This is not well documented when using wayland;  You log into gdm as root, and change the default keyboard to include colemak and remove the "US" layout.  Then add back the "US" layout.  There will be keyboard selector when you login to gnm after that point.
 
 
 ## Recovery
