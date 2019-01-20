@@ -401,6 +401,12 @@ I also install plymouth.  My final grub configuration  at `/etc/default/grub` li
 GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo nvidia quiet splash acpi_rev_override=1 acpi_osi=Linux pcie_aspm=force drm.vblankoffdelay=1 sci_mod.use_blk_mq=1 mem_sleep_default=deep"
 ```
 
+Also the recommended `/etc/modprobe.d/i915.conf`
+
+```
+options i915 enable_fbc=1 enable_guc=-1 disable_power_well=0 fastboot=1
+```
+
 ## Adding gestures.
 
 You may emerge `libinput-gestures` to allow configuration of tablet-like gestures for the touch screen under linux.  After follow the guide here:
