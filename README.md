@@ -175,6 +175,7 @@ rc-update add zfs-mount boot
  rc-update add zfs-zed default
 
 ```
+If zfs-kmod-9999 is not found or zfs-9999 is not found, funtoo stores its overlays in `/var/git/meta-repo/kits/core-kit/sys-fs/zfs-kmod`
 
 ## Add networking support
 
