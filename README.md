@@ -20,6 +20,8 @@ apt-get install --yes zfs-initramfs
 This erases the whole hard disk.  If you need the windows keys to run
 Windows in a virutalbox save them before you format the computer.
 
+See [Microsoft's method for keeping the key for a virutal machine](https://answers.microsoft.com/en-us/windows/forum/windows_10-windows_install-winpc/convert-windows-10-activation-to-virtual-machine/284089e3-af42-4b42-acb6-1e63d50a4212)
+
 This setup is very similar to the one Guy Robot talks about and the
 ZFS guide on funtoo also talks about.
 
