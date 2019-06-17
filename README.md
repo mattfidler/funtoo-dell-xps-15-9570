@@ -453,21 +453,21 @@ apt-add-repository universe
 apt-get install --yes zfs-initramfs
 
 
-zpool import -f rpool -R /mnt/funtoo -o cachefile=/tmp/zpool.cache # needed to rebuild kernel
-zpool set bootfs=rpool/ROOT/funtoo rpool
-zpool import -f boot -R /mnt/funtoo
+zpool import -f rpool -R /mnt/gentoo -o cachefile=/tmp/zpool.cache # needed to rebuild kernel
+zpool set bootfs=rpool/ROOT/gentoo rpool
+zpool import -f boot -R /mnt/gentoo
 
-cd /mnt/funtoo
+cd /mnt/gentoo
 mount -t proc none proc
 mount --rbind /sys sys
 mount --rbind /dev dev
 
 mount /dev/nvme0n1p2 boot/efi
-cp /etc/resolv.conf /mnt/funtoo/etc/
-cp /tmp/zpool.cache /mnt/funtoo/etc/zfs/ # needed to rebuild kernel
+cp /etc/resolv.conf /mnt/gentoo/etc/
+cp /tmp/zpool.cache /mnt/gentoo/etc/zfs/ # needed to rebuild kernel
 # We are now ready to chroot.
 
-chroot /mnt/funtoo /bin/bash
+chroot /mnt/gentoo /bin/bash
 env-update
 source /etc/profile
 export PS1="(chroot) $PS1"
