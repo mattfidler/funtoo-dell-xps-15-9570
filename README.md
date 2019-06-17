@@ -180,6 +180,11 @@ eselect locale set 6 # for me this is US EN utf
 
 ```sh
 emerge sys-kernel/gentoo-sources
+cd /usr/src/linux
+make
+make modules
+make modules_install
+make install
 ```
 
 ## Add ZFS tools, bootloader and grub2
@@ -206,7 +211,7 @@ At the same time, funtoo's ebuilds are a bit old for what I do, so I went to gen
 
 ```sh
 ## The Desktop flavor is needed for networkmanager to work.
-epro flavor desktop
+#epro flavor desktop # This only works with funtoo, since I use gentoo, this is no longer needed.
 emerge -auND @world ## Accept the configuration change
 etc-update ## Use -3 to merge the updates
 emerge -auND @world ## install the packages
