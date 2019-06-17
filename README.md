@@ -158,9 +158,15 @@ echo tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0 >> etc/fsta
 
 ```sh
 emerge-webrsync
+emerge --sync
+eselect profile list # I chose gnome
+eselect profile set 2
 env-update
 source /etc/profile
+emerge --ask --verbose --update --deep --newuse @world
 ```
+
+## Kernel Configuration
 
 ## Add ZFS tools, bootloader and grub2
 
