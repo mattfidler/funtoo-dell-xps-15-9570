@@ -157,7 +157,7 @@ echo tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0 >> etc/fsta
 ## Update portage
 
 ```sh
-ego sync
+emerge-webrsync
 env-update
 source /etc/profile
 ```
@@ -177,7 +177,10 @@ rc-update add zfs-mount boot
  rc-update add zfs-zed default
 
 ```
-If zfs-kmod-9999 is not found or zfs-9999 is not found, funtoo stores its overlays in `/var/git/meta-repo/kits/core-kit/sys-fs/zfs-kmod`
+
+Since funtoo abandonded zfs-kmod-9999 is not found or zfs-9999 is not found, you can still dwonload the overlays and use funtoo by using `/var/git/meta-repo/kits/core-kit/sys-fs/zfs-kmod`
+
+At the same time, funtoo's ebuilds are a bit old for what I do, so I went to gentoo.  They should be found in gentoo.
 
 ## Add networking support
 
