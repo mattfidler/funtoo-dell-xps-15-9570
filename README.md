@@ -70,15 +70,15 @@ mkfs.fat -F32 /dev/nvme0n1p2
 Then create the ZFS pools
 
 ```
-zpool create -f -d -o feature@async_destroy=enabled -o feature@empty_bpobj=enabled -o feature@lz4_compress=enabled -o feature@multi_vdev_crash_dump=enabled -o feature@spacemap_histogram=enabled -o feature@enabled_txg=enabled -o feature@hole_birth=enabled -o feature@extensible_dataset=enabled -o feature@embedded_data=enabled -o feature@bookmarks=enabled -o feature@filesystem_limits=enabled -o feature@large_blocks=enabled -o feature@sha512=enabled -o feature@skein=enabled -o feature@edonr=enabled -o feature@userobj_accounting=enabled -o ashift=12 -o cachefile=/tmp/zpool.cache -O compression=lz4 -O normalization=formD  -O atime=off -m none -R /mnt/funtoo rpool /dev/nvme0n1p5
+zpool create -f -d -o feature@async_destroy=enabled -o feature@empty_bpobj=enabled -o feature@lz4_compress=enabled -o feature@multi_vdev_crash_dump=enabled -o feature@spacemap_histogram=enabled -o feature@enabled_txg=enabled -o feature@hole_birth=enabled -o feature@extensible_dataset=enabled -o feature@embedded_data=enabled -o feature@bookmarks=enabled -o feature@filesystem_limits=enabled -o feature@large_blocks=enabled -o feature@sha512=enabled -o feature@skein=enabled -o feature@edonr=enabled -o feature@userobj_accounting=enabled -o ashift=12 -o cachefile=/tmp/zpool.cache -O compression=lz4 -O normalization=formD  -O atime=off -m none -R /mnt/gentoo rpool /dev/nvme0n1p5
 
 # Root pool
 zfs create -o mountpoint=none -o canmount=off rpool/ROOT
-zfs create -o mountpoint=/ rpool/ROOT/funtoo
+zfs create -o mountpoint=/ rpool/ROOT/gentoo
 
 # Pool for builds
-zfs create -o mountpoint=none -o canmount=off rpool/FUNTOO
-zfs create -o mountpoint=/var/tmp/portage -o compression=lz4 -o sync=disabled rpool/FUNTOO/build
+zfs create -o mountpoint=none -o canmount=off rpool/GENTOO
+zfs create -o mountpoint=/var/tmp/portage -o compression=lz4 -o sync=disabled rpool/GENTOO/build
 
 # Home pool
 
@@ -87,9 +87,9 @@ zfs create -o mountpoint=/home rpool/HOME
 
  # Make the root system bootable
  
-zpool set bootfs=rpool/ROOT/funtoo rpool
+zpool set bootfs=rpool/ROOT/gentoo rpool
 
-zpool create -f -d -o ashift=12 -o cachefile=none -m /boot -R /mnt/funtoo boot /dev/nvme0n1p3
+zpool create -f -d -o ashift=12 -o cachefile=none -m /boot -R /mnt/gentoo boot /dev/nvme0n1p3
 
 # Confirm the list
 zfs list -t all
@@ -106,7 +106,7 @@ swapon /dev/nvme0n1p4
 Now add `boot/efi`
 
 ```sh
-cd /mnt/funtoo
+cd /mnt/gentoo
 mkdir -p boot/efi
 mount /dev/nvme0n1p2 boot/efi
 ```
