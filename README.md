@@ -164,9 +164,23 @@ eselect profile set 2
 env-update
 source /etc/profile
 emerge --ask --verbose --update --deep --newuse @world
+
+## Setup locale
+ls /usr/share/zoneinfo
+## For me (currently)
+echo "US/Central" > etc/timezone
+emerge --config sys-libs/timezone-data
+nano -w /etc/locale.gen # for me I enable all the US English locales
+locale-gen
+eselect locale list
+eselect locale set 6 # for me this is US EN utf
 ```
 
 ## Kernel Configuration
+
+```sh
+emerge sys-kernel/gentoo-sources
+```
 
 ## Add ZFS tools, bootloader and grub2
 
