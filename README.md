@@ -124,23 +124,23 @@ tar -xpvf ~/Downloads/stage3-*.tar.xz
 Next chroot into funtoo
 
 ```sh
-cd /mnt/funtoo
+cd /mnt/gentoo
 mount -t proc none proc
 mount --rbind /sys sys
 mount --rbind /dev dev
 
-mkdir -p /mnt/funtoo/etc/zfs
-cp /tmp/zpool.cache /mnt/funtoo/etc/zfs/zpool.cache
+mkdir -p /mnt/gentoo/etc/zfs
+cp /tmp/zpool.cache /mnt/gentoo/etc/zfs/zpool.cache
 # Make sure that the zpoolcache exists!
 
 # You will also want to copy over resolv.conf in order 
 # to have proper resolution of Internet hostnames from 
 # inside the chroot:
 
-cp /etc/resolv.conf /mnt/funtoo/etc/
+cp /etc/resolv.conf /mnt/gentoo/etc/
 # We are now ready to chroot.
 
-chroot /mnt/funtoo /bin/bash
+chroot /mnt/gentoo /bin/bash
 export PS1="(chroot) $PS1"
 ```
 
