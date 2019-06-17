@@ -214,14 +214,7 @@ At the same time, funtoo's ebuilds are a bit old for what I do, so I went to gen
 ```sh
 ## The Desktop flavor is needed for networkmanager to work.
 #epro flavor desktop # This only works with funtoo, since I use gentoo, this is no longer needed.
-emerge -auND @world ## Accept the configuration change
-etc-update ## Use -3 to merge the updates
-emerge -auND @world ## install the packages
 emerge linux-firmware
-## Add the following to /etc/portage/make.conf
-## USE="elogind -consolekit -systemd"
-## This allows KDE/Gnome support as well as the networkmanager
-emerge networkmanager # May break gnome3 need to uninstall consolekit later...?
 emerge networkmanager
 ## See wiki.gnome.org/Projects/ConsoleKit
 rc-update add elogind boot
