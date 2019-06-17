@@ -245,8 +245,7 @@ rc-update add consolefont sysinit
 ```sh
 #Create a ZFS-friendly initramfs
 
-emerge --oneshot sys-kernel/genkernel
-rm -rf /boot/initramfs* # Remove Debian's default initramfs
+emerge --ask sys-kernel/genkernel-next # Make sure plymoth is installed in the use flags
 genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
 
 Confirm the presence of the new initramfs:
