@@ -181,6 +181,8 @@ eselect locale set 6 # for me this is US EN utf
 ```sh
 emerge sys-kernel/gentoo-sources
 cd /usr/src/linux
+wget https://raw.githubusercontent.com/mattfidler/funtoo-dell-xps-15-9570/master/config .config
+make menuconfig
 make
 make modules
 make modules_install
