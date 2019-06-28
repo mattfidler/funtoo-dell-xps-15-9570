@@ -153,6 +153,17 @@ echo /dev/nvme0n1p2    /boot/efi       vfat            defaults,noauto        1 
 echo /dev/nvme0n1p4    none            swap            sw                     0 0 >> /etc/fstab
 echo tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0 >> etc/fstab
  ```
+## Update make.conf
+
+I updated `make.conf` to have the following:
+
+```
+COMMON_FLAGS="-march=broadwell -g -O2 -pipe"
+...
+MAKE_OPTS="-j12"
+VIDEO_CARDS="intel i965 nvidia"
+INPUT_DEVICES="evdev wacom keyboard mouse libinput synaptics"
+```
 
 ## Update portage
 
