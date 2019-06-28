@@ -111,7 +111,7 @@ mkdir -p boot/efi
 mount /dev/nvme0n1p2 boot/efi
 ```
 
-Download stage3 tarball from https://www.funtoo.org/Intel64-skylake
+Download stage3 tarball from https://www.gentoo.org/downloads/ (funtoo was https://www.funtoo.org/Intel64-skylake)
 
 Then extract the tarball 
 
@@ -121,7 +121,7 @@ cd /mnt/funtoo
 tar -xpvf ~/Downloads/stage3-*.tar.xz
 ```
 
-Next chroot into funtoo
+Next chroot into gentoo
 
 ```sh
 cd /mnt/gentoo
