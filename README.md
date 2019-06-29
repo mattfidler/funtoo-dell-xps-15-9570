@@ -245,12 +245,9 @@ rc-update add consolefont sysinit
 
 
 ```sh
-#Create a ZFS-friendly initramfs
+genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --zfs
 
-emerge --ask sys-kernel/genkernel-next # Make sure plymoth is installed in the use flags
-genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/usr/src/linux/.config --zfs
-
-Confirm the presence of the new initramfs:
+# Confirm the presence of the new initramfs:
 ls /boot/*genkernel*
 ```
 
@@ -270,7 +267,6 @@ emerge grub
 touch /etc/mtab
 grub-probe / # Make sure this is zfs
 ```
-
 
 ## Making grub readable
 
@@ -292,7 +288,7 @@ GRUB_FONT=/boot/fonts/DejaVuSansMono48.pf2
 Make sure that the config file has:
 
 ```
-GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/funtoo"
+GRUB_CMDLINE_LINUX="dozfs real_root=ZFS=rpool/ROOT/gentoo"
 ```
 
 
