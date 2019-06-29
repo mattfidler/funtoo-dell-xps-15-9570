@@ -193,7 +193,7 @@ eselect locale set 6 # for me this is US EN utf
 emerge sys-kernel/gentoo-sources
 cd /usr/src/linux
 emerge genkernel-next
-genkernel all =--zfs --firmware
+genkernel all
 ```
 
 ## Add ZFS tools, bootloader and grub2
