@@ -13,7 +13,7 @@ Setup zfs tools in ubuntu
 sudo bash
 apt-add-repository universe
 apt-get install --yes zfs-initramfs
-```
+```gen
 
 ## Setup Hard Disk
 
@@ -192,8 +192,10 @@ eselect locale set 6 # for me this is US EN utf
 ```sh
 emerge sys-kernel/gentoo-sources
 cd /usr/src/linux
-emerge genkernel
-genkernel all
+wget https://raw.githubusercontent.com/mattfidler/funtoo-dell-xps-15-9570/master/config
+mv config .config
+make -j12
+make modules_install
 ```
 
 ## Add ZFS tools, bootloader and grub2
