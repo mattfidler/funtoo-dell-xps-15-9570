@@ -352,6 +352,8 @@ umount boot/efi
 cd /
 zpool export boot
 zpool export rpool
+zfs set mountpoint=/ rpool/ROOT/gentoo
+
 reboot
 ```
 
