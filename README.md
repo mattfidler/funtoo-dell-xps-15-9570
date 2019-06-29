@@ -205,7 +205,7 @@ emerge --ask sys-fs/zfs
 # Once it has successfully merged, add the following services to the boot runlevel of OpenRC:
 rc-update add zfs-import boot
 rc-update add zfs-mount boot
-#Add another two services to the default runlevel:
+# Add another two services to the default runlevel:
 
  rc-update add zfs-share default
  rc-update add zfs-zed default
@@ -308,21 +308,31 @@ You need to make sure it picks up the generated `initramfs` otherwise the system
 edit `/etc/conf.d/keymaps` to have the following line
 
 ```
-keymap="en-latin9"
+keymap="en-latin9
 ```
 This way I can type without having to look at my keyboard.
 
-## Time zone configuration
+## Add system logger
 
-You should link to the local time-zone.  For me it is US Central Time with daylight savings:
+I use metalogger because I don't have to rotate the logs. You can chose something else if you want.
 
 ```sh
-ln -sf /usr/share/zoneinfo/CST6SDT /etc/localtime
+emerge metalog
+rc-update add metalog default
 ```
 
-## Locale setup
+## Add Cron
 
-For me, the US and UTF locales are appropriate so this does not need to change.
+```sh
+emerge --ask sys-process/cronie
+rc-update add cronie default
+crontab /etc/crontab
+```
+
+## File indexing
+```sh
+emerge --ask sys-apps/mlocate
+```
 
 ## Final Configuration and reboot
 
