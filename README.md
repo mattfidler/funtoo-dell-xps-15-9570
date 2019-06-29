@@ -192,7 +192,7 @@ eselect locale set 6 # for me this is US EN utf
 ```sh
 emerge sys-kernel/gentoo-sources
 cd /usr/src/linux
-emerge genkernel-next
+emerge genkernel
 genkernel all
 ```
 
@@ -245,7 +245,7 @@ rc-update add consolefont sysinit
 
 
 ```sh
-genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --zfs
+genkernel initramfs --zfs
 
 # Confirm the presence of the new initramfs:
 ls /boot/*genkernel*
@@ -394,7 +394,7 @@ rm linux
 ln -sf linux-4.19.1-gentoo linux
 cd /usr/src/linux
 zcat /proc/config.gz > /root/config 
-genkernel kernel --no-clean --no-mountboot --menuconfig --makeopts=-j12 --kernel-config=/root/config --install --zfs
+genkernel initramfs --zfs
 emerge --ask @module-rebuild
 genkernel initramfs --no-clean --no-mountboot --makeopts=-j12 --kernel-config=/root/config --install --zfs --ramdisk-modules
 grub-mkconfig -o /boot/grub/grub.cfg
